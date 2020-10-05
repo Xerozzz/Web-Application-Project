@@ -14,14 +14,7 @@ def test():
 # Add User
 def addUser():
     print("Test")
-
-# Login Required
-def loginRequired(session):
-    if session:
-        return True
-    else:
-        return False
-
+    
 # Login User
 def loginUser(username,password):
     sql = "SELECT * FROM users WHERE username = '{}'".format(username)
@@ -50,3 +43,18 @@ def registerUser(username,password,email):
         return [True, data]
     except:
         return[False,0]
+
+# Admin Login
+def adminUser(username,password):
+    sql = "SELECT * FROM admin WHERE username = '{}'".format(username)
+    try:
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()[0]
+        cursor.close()
+        if username == data[1] and check_password_hash(data[2],password):
+            return [True,data[0]]
+        else:
+            return [False,0]
+    except:
+        return [False,0]
