@@ -6,7 +6,7 @@ def test():
     username = 'Xeroz'
     sql = "SELECT * FROM users where username = '{}'".format(username)
     cursor = conn.cursor()
-    cursor.execute(query)
+    cursor.execute(sql)
     data = cursor.fetchall()
     cursor.close()
     return data
