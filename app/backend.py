@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 # Test Function
 def test():
     username = 'Xeroz'
-    sql = "SELECT * FROM users where username = '{}'".format(username)
+    sql = "SELECT * FROM users"
     cursor = conn.cursor()
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -44,9 +44,9 @@ def registerUser(username,password,email):
     try:
         cursor = conn.cursor()
         cursor.execute(sql)
+        conn.commit()
         data = cursor.lastrowid
         cursor.close()
-        print(data)
         return [True, data]
     except:
         return[False,0]
