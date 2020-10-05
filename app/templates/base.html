@@ -5,13 +5,19 @@
         {% else %}
         <title>microblog</title>
         {% endif %}
+        <script>
+            
+        </script>
     </head>
     <body>
         <div>
-            Microblog:
+            Microblog
             <a href="{{ url_for('index') }}">Home</a>
             <a href="{{ url_for('login') }}">Login</a>
             <a href="{{ url_for('testPage') }}">Test</a>
+            {% if session['loggedin'] %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}
