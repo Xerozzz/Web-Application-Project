@@ -9,6 +9,8 @@ def test():
     cursor.execute(sql)
     data = cursor.fetchall()
     cursor.close()
+    conn.close()
+    conn.connect()
     return data
 
 # Add User
@@ -30,6 +32,8 @@ def loginUser(username,password):
         cursor.execute(sql)
         data = cursor.fetchall()[0]
         cursor.close()
+        conn.close()
+        conn.connect()
         if username == data[1] and check_password_hash(data[2],password):
             return [True,data[0]]
         else:
@@ -46,7 +50,19 @@ def registerUser(username,password,email):
         cursor.execute(sql)
         data = cursor.lastrowid
         cursor.close()
-        print(data)
+        conn.close()
+        conn.connect()
         return [True, data]
     except:
         return[False,0]
+
+# Get all products
+def allProds():
+    sql = "SELECT * FROM products"
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    conn.connect()
+    return data
