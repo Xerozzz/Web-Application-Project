@@ -1,19 +1,19 @@
 <html>
     <head>
         {% if title %}
-        <title>{{ title }} - Microblog</title>
+        <title>{{ title }} - Microblog Admin</title>
         {% else %}
-        <title>Microblog</title>
+        <title>Microblog Admin</title>
         {% endif %}
     </head>
     <body>
         <div>
-            Microblog
+            Microblog Admin
             <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('login') }}">Login</a>
-            <a href="{{ url_for('testPage') }}">Test</a>
             {% if session['loggedin'] %}
                 <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
             {% endif %}
         </div>
         <hr>

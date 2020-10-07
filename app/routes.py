@@ -77,11 +77,32 @@ def admin():
     return render_template('admin.html', title='Admin Sign In', form=form)
 
 # Admin Dashboard
-@app.route('/adminhome')
+@app.route('/adminhome', methods=['GET', 'POST'])
 def adminhome():
     if session.get('admin') != True:
         return redirect(url_for('index'))
-    return render_template('adminhome.html', title='Admin Dashboard')
+    return render_template('adminhome.html', title='Dashboard')
+
+# Admin Manage Items
+@app.route('/manageitem', methods=['GET', 'POST'])
+def manageitem():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))
+    return render_template('manageitem.html', title='Manage Items')
+
+# Admin Manage Users
+@app.route('/manageuser', methods=['GET', 'POST'])
+def manageuser():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))
+    return render_template('manageuser.html', title='Manage Users')
+
+# Admin Manage Admins
+@app.route('/manageadmin', methods=['GET', 'POST'])
+def manageadmin():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))
+    return render_template('manageadmin.html', title='Manage Admin')
 
 # Test Page
 @app.route('/testPage')

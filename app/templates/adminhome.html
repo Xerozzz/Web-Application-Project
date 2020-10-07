@@ -1,5 +1,11 @@
-{% extends "base.html" %}
+{% extends "adminbase.html" %}
 
 {% block content %}
-    <h1>Hi, Admin!</h1>
+    <h1>Welcome Admin!</h1>
+    <p>What would you like to do today?</p>
+    <div>
+        <a href="{{ url_for('manageitem') }}">Manage Items</a>
+        <a href="{{ url_for('manageuser') }}">Manage Users</a>
+        <a href="{{ url_for('manageadmin') }}">Manage Admins</a>
+    </div>
 {% endblock %}
