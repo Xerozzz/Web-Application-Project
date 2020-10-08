@@ -1,0 +1,25 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+    <h1>Item Management</h1>
+    <table>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Description</th>
+        <th>Edit Item</th>
+        {% for items in data %}
+        <tr>
+            {% for item in items %}
+                <td>${{ item }}<td>
+            {% endfor %}
+            <td><button id="{{items[0]}}" onclick="sendID(id)">Edit</button></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <script>
+        function sendID(id){
+            window.location.href = `/edititem?productid=${id}`
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,38 @@
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Microblog Admin</title>
+        {% else %}
+        <title>Microblog Admin</title>
+        {% endif %}
+        <script>
+            const baseUrl = "http://localhost:5000"
+        </script>
+    </head>
+    <body>
+        <div>
+            Microblog Admin
+            <a href="{{ url_for('adminhome') }}">Home</a>
+            <a href="{{ url_for('manageitem') }}">Manage Items</a>
+            <a href="{{ url_for('manageuser') }}">Manage Users</a>
+            <a href="{{ url_for('manageadmin') }}">Manage Admins</a>
+            {% if session['loggedin'] %}
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+            {% endif %}
+        </div>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    </body>
+</html>
