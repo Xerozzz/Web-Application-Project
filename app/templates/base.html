@@ -1,36 +1,161 @@
 <html>
     <head>
-        {% if title %}
-        <title>{{ title }} - Microblog</title>
-        {% else %}
-        <title>Microblog</title>
-        {% endif %}
-        <script>
-            const baseUrl = "http://localhost:5000"
-        </script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content='width=device-width, initial-scale=1.0'>
+        <meta http-equiv="X-UA-Compatible" content='ie=edge'>
+
+        
+        <link rel=stylesheet href="../static/css/template.css" type='text/css'>
+
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+        
+        <!-- jQuery library -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <!-- Popper JS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+        <!-- Latest compiled JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
     </head>
     <body>
-        <div>
-            Microblog
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('testPage') }}">Test</a>
-            {% if session['loggedin'] %}
-                <a href="{{ url_for('logout') }}">Logout</a>
-            {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-            {% endif %}
-        </div>
-        <hr>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-            <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="/">Placeholder Name</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                  <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Dropdown
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="dropdown-item" href="#">Action</a>
+                    <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#">Something else here</a>
+                  </div>
+                </li>
+                {% if session['loggedin'] %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('profile') }}">Profile</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+                </li>
+                {% endif %}
+
+              </ul>
+              <form class="form-inline my-2 my-lg-0" method=post action="{{ url_for('search') }}" id=search-form>
+                <input class="form-control mr-sm-2" type="search" name=search id=search placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" id='search-form' type="submit" value='Submit'>Search</button>
+              </form>
+            </div>
+          </nav>
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+          <ul>
+              {% for message in messages %}
+              <li>{{ message }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
+          {% endwith %}
+
         {% block content %}{% endblock %}
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    
     </body>
+     <!-- Footer -->
+     <footer class="page-footer bg-secondary" style="margin-top: 2%;">
+    
+        <!-- Footer Links -->
+        <div class="container-fluid text-center text-md-left">
+      
+          <!-- Grid row -->
+          <div class="row">
+      
+            <!-- Grid column -->
+            <div class="col-md-6 mt-md-0 mt-3">
+      
+              <!-- Content -->
+              <h5 class="text-uppercase" style = "padding-top: 2%;">Footer Content</h5>
+              <p>Here you can use rows and columns to organize your footer content.</p>
+      
+            </div>
+            <!-- Grid column -->
+      
+            <hr class="clearfix w-100 d-md-none pb-3">
+      
+            <!-- Grid column -->
+            <div class="col-md-3 mb-md-0 mb-3">
+      
+              <!-- Links -->
+              <h5 class="text-uppercase" style = "padding-top: 2%;">Links</h5>
+      
+              <ul class="list-unstyled">
+                <li>
+                  <a href="#!">Link 1</a>
+                </li>
+                <li>
+                  <a href="#!">Link 2</a>
+                </li>
+                <li>
+                  <a href="#!">Link 3</a>
+                </li>
+                <li>
+                  <a href="#!">Link 4</a>
+                </li>
+              </ul>
+      
+            </div>
+            <!-- Grid column -->
+      
+            <!-- Grid column -->
+            <div class="col-md-3 mb-md-0 mb-3">
+      
+              <!-- Links -->
+              <h5 class="text-uppercase" style = "padding-top: 2%;">Links</h5>
+      
+              <ul class="list-unstyled">
+                <li>
+                  <a href="#!">Link 1</a>
+                </li>
+                <li>
+                  <a href="#!">Link 2</a>
+                </li>
+                <li>
+                  <a href="#!">Link 3</a>
+                </li>
+                <li>
+                  <a href="#!">Link 4</a>
+                </li>
+              </ul>
+      
+            </div>
+            <!-- Grid column -->
+      
+          </div>
+          <!-- Grid row -->
+      
+        </div>
+        <!-- Footer Links -->
+      
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3 bg-dark text-white">© 2020 Copyright:
+          <a href="/"> Placeholder things</a>
+        </div>
+        <!-- Copyright -->
+      
+      </footer>
+      <!-- Footer -->
 </html>

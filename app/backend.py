@@ -51,6 +51,15 @@ def registerUser(username,password,email):
     except:
         return[False,0]
 
+# Get all products
+def allProds():
+    sql = "SELECT * FROM products"
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return data
 # Admin Login
 def adminUser(username,password):
     sql = "SELECT * FROM admin WHERE username = '{}'".format(username)
