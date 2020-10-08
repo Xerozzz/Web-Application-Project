@@ -1,9 +1,9 @@
 <html>
     <head>
         {% if title %}
-        <title>{{ title }} - Microblog</title>
+        <title>{{ title }} - Microblog Admin</title>
         {% else %}
-        <title>Microblog</title>
+        <title>Microblog Admin</title>
         {% endif %}
         <script>
             const baseUrl = "http://localhost:5000"
@@ -11,9 +11,11 @@
     </head>
     <body>
         <div>
-            Microblog
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('testPage') }}">Test</a>
+            Microblog Admin
+            <a href="{{ url_for('adminhome') }}">Home</a>
+            <a href="{{ url_for('manageitem') }}">Manage Items</a>
+            <a href="{{ url_for('manageuser') }}">Manage Users</a>
+            <a href="{{ url_for('manageadmin') }}">Manage Admins</a>
             {% if session['loggedin'] %}
                 <a href="{{ url_for('logout') }}">Logout</a>
             {% else %}
