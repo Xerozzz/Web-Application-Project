@@ -5,6 +5,9 @@
         {% else %}
         <title>Microblog Admin</title>
         {% endif %}
+        <script>
+            const baseUrl = "http://localhost:5000"
+        </script>
     </head>
     <body>
         <div>
@@ -30,5 +33,6 @@
         {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     </body>
 </html>

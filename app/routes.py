@@ -1,7 +1,7 @@
-from flask import render_template, flash, redirect, url_for,make_response, session
+from flask import render_template, flash, redirect, url_for, make_response, session, request
 from app import app
-from app.forms import LoginForm, RegisterForm, AdminForm
-from app.backend import addUser, test, loginUser, registerUser, adminUser, listItems
+from app.forms import *
+from app.backend import *
 
 # Index Page
 @app.route('/')
@@ -90,6 +90,30 @@ def manageitem():
         return redirect(url_for('index'))
     data = listItems()
     return render_template('manageitem.html', title='Manage Items', data = data)
+
+# Admin Edit Item
+@app.route('/edititem', methods=['GET', 'POST'])
+def edititem():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))
+    form = EditItem()
+    productid = request.args.get('productid')
+    if form.validate_on_submit():
+        info = [productid,form.productName.data,form.productPrice.data,form.productDesc.data]
+        if updateProduct(info) == False:
+            flash("Item update failed. Try again")
+        else:
+            flash("Updated Successfully!")
+        return redirect(url_for('manageitem'))
+    elif request.method == "GET":
+        data = getProduct(productid)
+        if data == False:
+            return render_template('edititem.html', title='Edit Item', form = form)
+        else:
+            form.productName.data = data[1]
+            form.productPrice.data = data[2]
+            form.productDesc.data = data[3]
+    return render_template('edititem.html', title='Edit Item', form = form)
 
 # Admin Manage Users
 @app.route('/manageuser', methods=['GET', 'POST'])

@@ -68,7 +68,7 @@ def adminUser(username,password):
     except:
         return [False,0]
 
-# List Items
+# List Products
 def listItems():
     sql = "SELECT * FROM products"
     try:
@@ -81,3 +81,34 @@ def listItems():
         return data
     except:
         return "An error has occurred, please check the backend"
+
+# Get Specific Product
+def getProduct(productid):
+    sql = "SELECT * FROM products WHERE productid = '{}'".format(productid)
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()[0]
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
+
+# Update Product
+def updateProduct(info):
+    sql = "UPDATE products SET name = '{1}', price = {2}, description = '{3}' where productid = {0}".format(info[0],info[1],info[2],info[3])
+    try:
+        print(sql)
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        data = cursor.rowcount
+        print(data)
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
