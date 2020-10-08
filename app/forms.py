@@ -28,3 +28,7 @@ class EditItem(FlaskForm):
     productPrice = DecimalField('Product Price (xx.xx)',validators=[DataRequired()])
     productDesc = StringField('Product Description', validators=[DataRequired()])
     submit = SubmitField('Edit Item') 
+class EditProfileForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired()])
+    submit = SubmitField('Submit')
