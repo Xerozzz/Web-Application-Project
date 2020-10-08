@@ -11,6 +11,17 @@ def test():
     cursor.close()
     return data
 
+def getProfile(userid):
+    sql = "SELECT username, email FROM users WHERE userid = '{}'".format(userid)
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    for row in data:
+        username = row[0]
+        email = row[1]
+    cursor.close()
+    return username,email
+
 # Add User
 def addUser():
     print("Test")
@@ -44,6 +55,22 @@ def registerUser(username,password,email):
     try:
         cursor = conn.cursor()
         cursor.execute(sql)
+        conn.commit()
+        data = cursor.lastrowid
+        cursor.close()
+        print(data)
+        return [True, data]
+    except:
+        return[False,0]
+
+def editProfile(username,email,userid):
+    print(username,email,userid)
+    query = ''' UPDATE users SET username = %s, email =%s WHERE userid =%s '''
+    data = (username,email,userid)
+    try:
+        cursor = conn.cursor()
+        cursor.execute(query,data)
+        conn.commit()
         data = cursor.lastrowid
         cursor.close()
         print(data)
