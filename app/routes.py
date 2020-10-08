@@ -6,7 +6,7 @@ from app.backend import *
 # Index Page
 @app.route('/')
 def home():
-    allListings = allProds()
+    allListings = listItems()
     listings = []
     for item in allListings:
         item = list(item)
@@ -43,7 +43,7 @@ def login():
 # Profile Page
 @app.route('/profile', methods=['GET'])
 def profile():
-    if loginRequired(session.get('loggedin')) == False:
+    if session.get('loggedin') == False:
         return redirect(url_for('login'))
     else:
        userid = session.get('userid')

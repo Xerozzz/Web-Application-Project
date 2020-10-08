@@ -16,6 +16,7 @@ def test():
 
 def getProfile(userid):
     sql = "SELECT username, email FROM users WHERE userid = '{}'".format(userid)
+    conn.connect()
     cursor = conn.cursor()
     cursor.execute(sql)
     data = cursor.fetchall()
@@ -23,11 +24,8 @@ def getProfile(userid):
         username = row[0]
         email = row[1]
     cursor.close()
+    conn.close()
     return username,email
-
-# Add User
-def addUser():
-    print("Test")
     
 # Login User
 def loginUser(username,password):
@@ -57,6 +55,7 @@ def registerUser(username,password,email):
         conn.commit()
         data = cursor.lastrowid
         cursor.close()
+        conn.close()
         print(data)
         return [True, data]
     except:
@@ -67,6 +66,7 @@ def editProfile(username,email,userid):
     query = ''' UPDATE users SET username = %s, email =%s WHERE userid =%s '''
     data = (username,email,userid)
     try:
+        conn.connect()
         cursor = conn.cursor()
         cursor.execute(query,data)
         conn.commit()
@@ -77,15 +77,6 @@ def editProfile(username,email,userid):
     except:
         return[False,0]
 
-# Get all products
-def allProds():
-    sql = "SELECT * FROM products"
-    cursor = conn.cursor()
-    cursor.execute(sql)
-    data = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return data
 # Admin Login
 def adminUser(username,password):
     sql = "SELECT * FROM admin WHERE username = '{}'".format(username)
@@ -135,13 +126,11 @@ def getProduct(productid):
 def updateProduct(info):
     sql = "UPDATE products SET name = '{1}', price = {2}, description = '{3}' where productid = {0}".format(info[0],info[1],info[2],info[3])
     try:
-        print(sql)
         conn.connect()
         cursor = conn.cursor()
         cursor.execute(sql)
         conn.commit()
         data = cursor.rowcount
-        print(data)
         cursor.close()
         conn.close()
         return data
