@@ -9,11 +9,14 @@
     <body>
         <div>
             Microblog Admin
-            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('adminhome') }}">Home</a>
+            <a href="{{ url_for('manageitem') }}">Manage Items</a>
+            <a href="{{ url_for('manageuser') }}">Manage Users</a>
+            <a href="{{ url_for('manageadmin') }}">Manage Admins</a>
             {% if session['loggedin'] %}
                 <a href="{{ url_for('logout') }}">Logout</a>
             {% else %}
-            <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('login') }}">Login</a>
             {% endif %}
         </div>
         <hr>

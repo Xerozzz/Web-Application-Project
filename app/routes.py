@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for,make_response, session
-from app import app, conn
+from app import app
 from app.forms import LoginForm, RegisterForm, AdminForm
-from app.backend import addUser, test, loginUser, registerUser, adminUser
+from app.backend import addUser, test, loginUser, registerUser, adminUser, listItems
 
 # Index Page
 @app.route('/')
@@ -88,7 +88,8 @@ def adminhome():
 def manageitem():
     if session.get('admin') != True:
         return redirect(url_for('index'))
-    return render_template('manageitem.html', title='Manage Items')
+    data = listItems()
+    return render_template('manageitem.html', title='Manage Items', data = data)
 
 # Admin Manage Users
 @app.route('/manageuser', methods=['GET', 'POST'])

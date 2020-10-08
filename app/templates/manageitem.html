@@ -1,5 +1,18 @@
 {% extends "adminbase.html" %}
 
 {% block content %}
-    <h1>ITem Management</h1>
+    <h1>Item Management</h1>
+    <table>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Description</th>
+        {% for items in data %}
+        <tr>
+            {% for item in items %}
+                <td>{{ item }}<td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
 {% endblock %}
