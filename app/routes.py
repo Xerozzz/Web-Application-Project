@@ -107,7 +107,7 @@ def search():
     if emptyCheck == '':
         return render_template('search.html', query = "blank", listings=[], empty=True)
     else:
-        listings = allProds()
+        listings = listItems()
         print(listings)
         results = []
         for item in listings:
@@ -158,7 +158,7 @@ def edititem():
     form = EditItem()
     productid = request.args.get('productid')
     if form.validate_on_submit():
-        info = [productid,form.productName.data,form.productPrice.data,form.productDesc.data]
+        info = [productid,form.productName.data,form.productPrice.data,form.productDesc.data,form.productCat.data]
         if updateProduct(info) == False:
             flash("Item update failed. Try again")
         else:
@@ -172,7 +172,23 @@ def edititem():
             form.productName.data = data[1]
             form.productPrice.data = data[2]
             form.productDesc.data = data[3]
+            form.productCat.data = data[4]
     return render_template('edititem.html', title='Edit Item', form = form)
+
+# Admin Add Item
+@app.route('/additem', methods=['GET', 'POST'])
+def additem():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))
+    form = AddItem()
+    if form.validate_on_submit():
+        info = [form.productName.data,form.productPrice.data,form.productDesc.data,form.productCat.data]
+        if addProduct(info) == False:
+            flash("Item addition failed. Try again")
+        else:
+            flash("Item Added Successfully!")
+        return redirect(url_for('manageitem'))
+    return render_template('additem.html', title='Add New Item', form = form)
 
 # Admin Manage Users
 @app.route('/manageuser', methods=['GET', 'POST'])
