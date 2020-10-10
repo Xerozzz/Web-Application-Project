@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link rel=stylesheet href="../static/css/home.css" type='text/css'>
+
 <div id="carouselExampleControls" class="carousel slide" data-ride="carousel" style="padding-bottom: 2%;">
     <div class="carousel-inner" style="max-width: 100%; max-height: 500px;">
       <div class="carousel-item active">
@@ -26,7 +28,11 @@
         <div class = "col-md-3 col-sm-4">
             <div class="card">
                 <img src={{ listing[4] }} alt={{ listing[1] }} style="width:100%">
-                <h2>{{ listing[1] }}</h2>
+                <a href=/product/{{ listing[0] }}>
+                  <div class="link">
+                       <h2>{{ listing[1] }}</h2>
+                  </div>
+                </a>
                 <p class="price">${{ listing[2] }}</p>
                 <p><button>Add to Cart</button></p>
             </div>

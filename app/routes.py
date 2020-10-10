@@ -107,14 +107,62 @@ def search():
     if emptyCheck == '':
         return render_template('search.html', query = "blank", listings=[], empty=True)
     else:
-        listings = allProds()
-        print(listings)
+        listings = listItems()
         results = []
         for item in listings:
             item = list(item)
             if query in item[1]:
                 results.append(item)
         return render_template('search.html', query = query, listings=results, empty=False)        
+# Category Page
+@app.route("/category/<category>")
+def catPg(category):
+    listings = getRelated(category)
+    results = []
+    for item in listings:
+        item = list(item)
+        results.append(item)
+    return render_template('category.html', category = category, listings=results, empty=False)        
+
+
+# Product Page
+@app.route('/product/<int:id>')
+def prodPg(id):
+    details = getProduct(id)
+    colors = list(getColors(id))
+    color = []
+    sizes = list(getSizes(id))
+    size = []
+    for i in colors:
+        if (str(i) == "(None,)") or (str(i) == "('',)"):
+            continue
+        else:
+            i = str(i)
+            i = i[2:-3]
+            if i not in color:
+                color.append(i)
+
+    for i in sizes:
+        if (str(i) == "(None,)") or (str(i) == "('',)"):
+            continue
+        else:
+            a = str(i)[2:-3]
+            if a not in size:
+                size.append(a)
+            
+    info = list(details)
+    related = getRelated(info[4])
+    listings = []
+    if related == False:
+        return render_template('product.html', info = info, sizes = size, colors = color)
+    else:
+        for item in related:
+            item = list(item)
+            if len(listings) < 4:
+                listings.append(item)
+            else:
+                break
+        return render_template('product.html', info = info, sizes = size, colors = color, listings=listings)
 
 # Admin Login
 @app.route('/admin', methods=['GET', 'POST'])
