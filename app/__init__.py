@@ -10,11 +10,11 @@ MySQL = MySQL()
 MySQL.init_app(app)
 
 # Database config
-app.config['MYSQL_DATABASE_HOST'] = os.getenv('MYSQL_DATABASE_HOST')
-app.config['MYSQL_DATABASE_PORT'] = int(os.getenv('MYSQL_DATABASE_PORT'))
-app.config['MYSQL_DATABASE_USER'] = os.getenv('MYSQL_DATABASE_USER')
-app.config['MYSQL_DATABASE_PASSWORD'] = os.getenv('MYSQL_DATABASE_PASSWORD')
-app.config['MYSQL_DATABASE_DB'] = os.getenv('MYSQL_DATABASE_DB')
+app.config['MYSQL_DATABASE_HOST'] = 'project-database.cokyaqjxq7d8.ap-southeast-1.rds.amazonaws.com'
+app.config['MYSQL_DATABASE_PORT'] = 3306
+app.config['MYSQL_DATABASE_USER'] = 'admin'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'chloeisgay'
+app.config['MYSQL_DATABASE_DB'] = 'flask'
 
 conn = MySQL.connect()
 
