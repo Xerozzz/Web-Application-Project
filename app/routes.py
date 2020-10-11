@@ -78,6 +78,7 @@ def logout():
     session.pop('userid',None)
     session.pop('username',None)
     session.pop('admin',None)
+    session.pop('cart',None)
     return render_template('logout.html', title = "Log out")
 
 # Register
@@ -93,6 +94,7 @@ def register():
             session['loggedin'] = True
             session['userid'] = reply[1]
             session['username'] = username
+            session['cart'] = {}
             return redirect(url_for('index'))
         else:
             flash("Username or email already in use! Try again.")
@@ -129,6 +131,7 @@ def admin():
             session['userid'] = reply[1]
             session['username'] = username
             session['admin'] = True
+            session['cart'] = {}
             return redirect(url_for('adminhome'))
         else:
             flash("Invalid username or password")
@@ -209,4 +212,3 @@ def manageadmin():
 def testPage():
     testinfo = test()
     return render_template('test.html', test = testinfo)
-
