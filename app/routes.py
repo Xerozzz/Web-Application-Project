@@ -34,6 +34,7 @@ def login():
             session['loggedin'] = True
             session['userid'] = reply[1]
             session['username'] = username
+            session['cart'] = {}
             return redirect(url_for('index'))
         else:
             flash("Invalid username or password")
@@ -206,6 +207,16 @@ def manageadmin():
     if session.get('admin') != True:
         return redirect(url_for('index'))
     return render_template('manageadmin.html', title='Manage Admin')
+
+# Adding Item to Cart
+@app.route('/addcart', methods=['POST'])
+def addcart():
+    productid = request.values.get('productid')
+    quantity = request.values.get('quantity')
+    session['cart'][productid] = quantity
+    session.modified = True
+    flash("Item added to cart successfully!")
+    return redirect(url_for('index'))
 
 # Test Page
 @app.route('/testPage')
