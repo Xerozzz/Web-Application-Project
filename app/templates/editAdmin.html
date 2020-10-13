@@ -1,0 +1,20 @@
+{% extends "adminbase.html" %}
+
+{% block content %}
+    <h1>Edit Admin!</h1>
+    {% if error %}
+        <p>Sorry, an error has occurred. Try again. If the problem persists, please check the backend for troubleshooting.</p>
+    {% else %}
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <p>
+                {{ form.username.label }}<br>
+                {{ form.username(size=32) }}<br>
+                {% for error in form.username.errors %}
+                <span style="color: red;">[{{ error }}]</span>
+                {% endfor %}
+            </p>
+            <p>{{ form.submit() }}</p>
+        </form>
+    {% endif %}
+{% endblock %}
