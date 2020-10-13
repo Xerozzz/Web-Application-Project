@@ -1,7 +1,7 @@
 from flask import render_template, flash, redirect, url_for, make_response, session, request
 from app import app
-from app.forms import LoginForm,RegisterForm,AdminForm,EditItem,EditProfileForm,EditUserForm,EditAdminForm,RegisterAdminForm
-from app.backend import getProfile,loginUser,registerUser,editProfile,adminUser,listItems,listUsers,getProduct,getUser,updateProduct,updateUser,deleteUser,listAdmins, deleteAdmin,updateAdmin,getAdmin,registerAdmin
+from app.forms import *
+from app.backend import *
 
 # Index Page
 @app.route('/')
@@ -118,8 +118,9 @@ def search():
             if query in item[1]:
                 results.append(item)
         return render_template('search.html', query = query, listings=results, empty=False)        
+        
 # Category Page
-@app.route("/categ ory/<category>")
+@app.route("/category/<category>")
 def catPg(category):
     listings = getRelated(category)
     results = []
@@ -260,7 +261,6 @@ def edituser():
     userid = request.args.get('userid')
     if form.validate_on_submit():
         info = [userid,form.username.data,form.email.data,form.about.data]
-        print(info)
         if updateUser(info) == False:
             flash("User update failed. Please try again.")
         else:
@@ -371,6 +371,7 @@ def addadmin():
     elif request.method == "GET":
         return render_template('addadmin.html',form = form)
     return render_template('addadmin.html',form = form)
+    
 # Adding Item to Cart
 @app.route('/addcart', methods=['POST'])
 def addcart():
@@ -380,9 +381,3 @@ def addcart():
     session.modified = True
     flash("Item added to cart successfully!")
     return redirect(url_for('index'))
-
-# Test Page
-@app.route('/testPage')
-def testPage():
-    testinfo = test()
-    return render_template('test.html', test = testinfo)

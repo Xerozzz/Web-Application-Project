@@ -161,6 +161,18 @@ def getProduct(productid):
 # Get Specific User
 def getUser(userid):
     sql = "SELECT username,email,about FROM users WHERE userid = '{}'".format(userid)
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()[0]
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
+
+# Get products of same category
 def getRelated(category):
     sql = "SELECT * FROM products WHERE category = '{}'".format(category)
     try:
@@ -177,6 +189,18 @@ def getRelated(category):
 # Get Specifc Admin
 def getAdmin(adminid):
     sql = "SELECT username FROM admin WHERE adminid = '{}'".format(adminid)
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()[0]
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
+
+
 # Get sizes
 def getSizes(productid):
     sql = "SELECT size FROM variations WHERE productid = {}".format(productid)
@@ -221,9 +245,6 @@ def updateProduct(info):
     except:
         return False
 
-def updateUser(info):
-    sql = "UPDATE users SET username='{1}', email='{2}', about='{3}' where userid='{0}'".format(info[0],info[1],info[2],info[3])
-    try:
 # Add New Products
 def addProduct(info):
     sql =  "INSERT INTO products (name,price,description,category) VALUES ('{0}',{1},'{2}','{3}')".format(info[0],info[1],info[2],info[3])
@@ -239,6 +260,22 @@ def addProduct(info):
         return data
     except:
         return False
+
+def updateUser(info):
+    sql = "UPDATE users SET username='{1}', email='{2}', about='{3}' where userid='{0}'".format(info[0],info[1],info[2],info[3])
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        data = cursor.rowcount
+        cursor.close()
+        conn.close()
+        print(data)
+        return data
+    except:
+        return False
+
 
 def updateAdmin(info):
     sql = "UPDATE admin SET username='{1}' where adminid='{0}'".format(info[0],info[1])
@@ -269,7 +306,7 @@ def deleteUser(userid):
     except:
         return False
 
-def  deleteAdmin(adminid):
+def deleteAdmin(adminid):
     sql = "DELETE FROM admin WHERE adminid = '{}'".format(adminid)
     try:
         conn.connect()
@@ -277,13 +314,6 @@ def  deleteAdmin(adminid):
         cursor.execute(sql)
         conn.commit()
         data = cursor.rowcount
-        cursor.close()
-        conn.close()
-        return data
-    except:
-        return False
-
-        data = cursor.lastrowid
         cursor.close()
         conn.close()
         return data

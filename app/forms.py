@@ -60,9 +60,3 @@ class AddItem(FlaskForm):
     productDesc = StringField('Product Description', validators=[DataRequired()])
     productCat = StringField('Product Category', validators=[DataRequired()])
     submit = SubmitField('Add Item') 
-
-# Edit Profile Form
-class EditProfileForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired()])
-    submit = SubmitField('Submit')
