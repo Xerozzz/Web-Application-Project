@@ -121,6 +121,47 @@ def getProduct(productid):
     except:
         return False
 
+def getRelated(category):
+    sql = "SELECT * FROM products WHERE category = '{}'".format(category)
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
+
+# Get sizes
+def getSizes(productid):
+    sql = "SELECT size FROM variations WHERE productid = {}".format(productid)
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
+
+# Get colors
+def getColors(productid):
+    sql = "SELECT color FROM variations WHERE productid = {}".format(productid)
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
+
 # Update Product
 def updateProduct(info):
     sql = "UPDATE products SET name = '{1}', price = {2}, description = '{3}', category = '{4}' where productid = {0}".format(info[0],info[1],info[2],info[3],info[4])
