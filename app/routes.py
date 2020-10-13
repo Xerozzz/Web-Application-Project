@@ -43,6 +43,7 @@ def login():
             session['loggedin'] = True
             session['userid'] = reply[1]
             session['username'] = username
+            session['cart'] = {}
             return redirect(url_for('index'))
         else:
             flash("Invalid username or password")
@@ -56,19 +57,20 @@ def profile():
         return redirect(url_for('login'))
     else:
        userid = session.get('userid')
-       username,email = getProfile(userid)
-    return render_template('profile.html', username=username, email = email)
+       print("this is the userid {}".format(userid))
+       username,email,about = getProfile(userid)
+    return render_template('profile.html', username=username, email = email, about=about)
 
 #Editing Profile Page
 @app.route('/editProfile', methods=['GET','POST'])
 def edit_profile():
     form = EditProfileForm()
     userid = session.get('userid')
-    username, email = getProfile(userid)
+    username, email, about = getProfile(userid)
     if form.validate_on_submit():
         username = form.username.data
-        email = form.email.data
-        reply = editProfile(username,email,userid)
+        about = form.about.data
+        reply = editProfile(username,about,userid)
         if reply [0] == True:
             flash('Your changes have been saved.')
             return redirect(url_for('profile'))
@@ -77,7 +79,7 @@ def edit_profile():
             return redirect(url_for('edit_profile'))
     elif request.method == 'GET':
         form.username.data = username
-        form.email.data = email
+        form.about.data = about
     return render_template('editProfile.html', title='Edit Profile',form=form)
 
 # Logout
@@ -87,6 +89,7 @@ def logout():
     session.pop('userid',None)
     session.pop('username',None)
     session.pop('admin',None)
+    session.pop('cart',None)
     return render_template('logout.html', title = "Log out")
 
 # Register
@@ -102,6 +105,7 @@ def register():
             session['loggedin'] = True
             session['userid'] = reply[1]
             session['username'] = username
+            session['cart'] = {}
             return redirect(url_for('index'))
         else:
             flash("Username or email already in use! Try again.")
@@ -123,6 +127,7 @@ def search():
             if query in item[1]:
                 results.append(item)
         return render_template('search.html', query = query, listings=results, empty=False)        
+        
 # Category Page
 @app.route("/category/<category>")
 def catPg(category):
@@ -205,6 +210,7 @@ def admin():
             session['userid'] = reply[1]
             session['username'] = username
             session['admin'] = True
+            session['cart'] = {}
             return redirect(url_for('adminhome'))
         else:
             flash("Invalid username or password")
@@ -234,7 +240,7 @@ def edititem():
     form = EditItem()
     productid = request.args.get('productid')
     if form.validate_on_submit():
-        info = [productid,form.productName.data,form.productPrice.data,form.productDesc.data]
+        info = [productid,form.productName.data,form.productPrice.data,form.productDesc.data,form.productCat.data]
         if updateProduct(info) == False:
             flash("Item update failed. Try again")
         else:
@@ -248,25 +254,158 @@ def edititem():
             form.productName.data = data[1]
             form.productPrice.data = data[2]
             form.productDesc.data = data[3]
+            form.productCat.data = data[4]
     return render_template('edititem.html', title='Edit Item', form = form)
+
+# Admin Add Item
+@app.route('/additem', methods=['GET', 'POST'])
+def additem():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))
+    form = AddItem()
+    if form.validate_on_submit():
+        info = [form.productName.data,form.productPrice.data,form.productDesc.data,form.productCat.data]
+        if addProduct(info) == False:
+            flash("Item addition failed. Try again")
+        else:
+            flash("Item Added Successfully!")
+        return redirect(url_for('manageitem'))
+    return render_template('additem.html', title='Add New Item', form = form)
 
 # Admin Manage Users
 @app.route('/manageuser', methods=['GET', 'POST'])
 def manageuser():
     if session.get('admin') != True:
         return redirect(url_for('index'))
-    return render_template('manageuser.html', title='Manage Users')
+    data = listUsers()
+    return render_template('manageuser.html', title='Manage Users', data = data)
+
+#Admin Edit User
+@app.route('/edituser', methods=['GET','POST'])
+def edituser():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))
+    form = EditUserForm()
+    userid = request.args.get('userid')
+    if form.validate_on_submit():
+        info = [userid,form.username.data,form.email.data,form.about.data]
+        if updateUser(info) == False:
+            flash("User update failed. Please try again.")
+        else:
+            flash("Updated Successfully!")
+        return redirect(url_for("manageuser"))
+    elif request.method =="GET":
+        data = getUser(userid)
+        if data == False:
+            print(data)
+            return render_template('editUser.html', title="Edit User",form=form)
+        else:
+            form.username.data = data[0]
+            form.email.data = data[1]
+            form.about.data = data[2]
+    return render_template('editUser.html', title='Edit User', form = form)
+
+@app.route('/deleteuser', methods=['GET', 'POST','DELETE'])
+def deleteuser():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))
+    userid = request.args.get('userid')
+    data = deleteUser(userid)
+    if data == False:
+        flash("Fail to delete please try again.")
+    else:
+        flash("Deleted successfully")
+    return redirect(url_for("manageuser"))
+
+@app.route('/addUser', methods=['GET','POST'])
+def adduser():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))    
+    form = RegisterForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        email = form.email.data
+        reply = registerUser(username,password,email)
+        if reply[0] == True:
+            flash("Successfully added new user")
+            return redirect(url_for('manageuser'))
+        else:
+            flash("Username or email already in use! Try again.")
+            return redirect(url_for('manageuser'))
+    elif request.method == "GET":
+        return render_template('adduser.html',form = form)
+    return render_template('adduser.html',form = form)
 
 # Admin Manage Admins
 @app.route('/manageadmin', methods=['GET', 'POST'])
 def manageadmin():
     if session.get('admin') != True:
         return redirect(url_for('index'))
-    return render_template('manageadmin.html', title='Manage Admin')
+    data = listAdmins()
+    return render_template('manageadmin.html', data = data)
 
-# Test Page
-@app.route('/testPage')
-def testPage():
-    testinfo = test()
-    return render_template('test.html', test = testinfo)
+#Admin Delete Admin
+@app.route('/deleteadmin', methods=['GET', 'POST','DELETE'])
+def deleteadmin():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))
+    adminid = request.args.get('adminid')
+    data = deleteAdmin(adminid)
+    if data == False:
+        flash("Fail to delete please try again.")
+    else:
+        flash("Deleted successfully")
+    return redirect(url_for("manageadmin"))
 
+@app.route('/editadmin', methods=['GET','POST'])
+def editadmin():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))
+    form = EditAdminForm()
+    adminid = request.args.get('adminid')
+    if form.validate_on_submit():
+        info = [adminid,form.username.data]
+        print(info)
+        if updateAdmin(info) == False:
+            flash("User update failed. Please try again.")
+        else:
+            flash("Updated Successfully!")
+        return redirect(url_for("manageadmin"))
+    elif request.method =="GET":
+        data = getAdmin(adminid)
+        if data == False:
+            print(data)
+            return render_template('editAdmin.html', title="Edit User",form=form)
+        else:
+            form.username.data = data[0]
+    return render_template('editAdmin.html', title='Edit User', form = form)
+
+@app.route('/addAdmin', methods=['GET','POST'])
+def addadmin():
+    if session.get('admin') != True:
+        return redirect(url_for('index'))    
+    form = RegisterAdminForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        password = form.password.data
+        reply = registerAdmin(username,password)
+        if reply[0] == True:
+            flash("Successfully added new user")
+            return redirect(url_for('manageadmin'))
+        else:
+            flash("Username already in use! Try again.")
+            return redirect(url_for('manageadmin'))
+    elif request.method == "GET":
+        return render_template('addadmin.html',form = form)
+    return render_template('addadmin.html',form = form)
+    
+# Adding Item to Cart
+@app.route('/addcart', methods=['POST'])
+def addcart():
+    productid = request.values.get('productid')
+    quantity = request.values.get('quantity')
+    session['cart'][productid] = quantity
+    session.modified = True
+    flash("Item added to cart successfully!")
+    return redirect(url_for('index'))

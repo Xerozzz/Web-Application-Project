@@ -2,11 +2,13 @@
 
 {% block content %}
     <h1>Item Management</h1>
+    <button onclick="addItem()">Add New Item</button>
     <table>
         <th>ID</th>
         <th>Name</th>
         <th>Price ($)</th>
         <th>Description</th>
+        <th>Category</th>
         <th>Edit Item</th>
         {% for items in data %}
         <tr>
@@ -20,6 +22,9 @@
     <script>
         function sendID(id){
             window.location.href = `/edititem?productid=${id}`
+        }
+        function addItem(){
+            window.location.href = `/additem`
         }
     </script>
 {% endblock %}
