@@ -63,9 +63,19 @@
             
                 <!-- Product Pricing -->
                 <div class="product-price">
-                  <span>${{ info[2] }}</span>
+                  <span><h3>${{ info[2] }}</h3></span>
                   <br>
-                  <a href="#" class="cart-btn">Add to cart</a>
+                  {% if session['loggedin'] %}
+                  <form method=post>
+                    <input type=number id=quantity value=1 name=quantity min=1 required>
+                    <button type = submit value=Submit><a class="cart-btn">Add to cart</a></button>
+                  </form>
+                  {% endif %}
+
+                  {% if not session['loggedin'] %}
+                  <a href='/login'>Please Login before adding any items to cart</a>
+                  {% endif %}
+
                 </div>
               </div>
             </div>
@@ -84,7 +94,7 @@
                   </div>
                 </a>
                 <p class="price">${{ listing[2] }}</p>
-                <p><button>Add to Cart</button></p>
+              <a href=/product/{{ listing[0] }} class="btn btn-primary">View</a>
             </div>
         </div>
         {% endfor %}

@@ -20,7 +20,15 @@ def home():
 def index():
     if session.get('loggedin') != True:
         return redirect(url_for('login'))
-    return render_template('index.html', title='Home')
+    allListings = listItems()
+    listings = []
+    for item in allListings:
+        item = list(item)
+        if len(listings) < 4:
+            listings.append(item)
+        else:
+            break
+    return render_template('index.html', listings = listings)
 
 # Login Page
 @app.route('/login', methods=['GET', 'POST'])
@@ -31,6 +39,7 @@ def login():
         password = form.password.data
         reply = loginUser(username,password)
         if reply[0] == True:
+            session['cart'] = {}
             session['loggedin'] = True
             session['userid'] = reply[1]
             session['username'] = username
@@ -126,43 +135,62 @@ def catPg(category):
 
 
 # Product Page
-@app.route('/product/<int:id>')
+@app.route('/product/<int:id>', methods=["GET","POST"])
 def prodPg(id):
-    details = getProduct(id)
-    colors = list(getColors(id))
-    color = []
-    sizes = list(getSizes(id))
-    size = []
-    for i in colors:
-        if (str(i) == "(None,)") or (str(i) == "('',)"):
-            continue
+    if request.method == 'POST':
+        quantity = int(request.form["quantity"])
+        
+        print(str(id))
+        if str(id) in session.get('cart'):
+            session['cart'][str(id)] += quantity
+            print('increment')
         else:
-            i = str(i)
-            i = i[2:-3]
-            if i not in color:
-                color.append(i)
-
-    for i in sizes:
-        if (str(i) == "(None,)") or (str(i) == "('',)"):
-            continue
-        else:
-            a = str(i)[2:-3]
-            if a not in size:
-                size.append(a)
-            
-    info = list(details)
-    related = getRelated(info[4])
-    listings = []
-    if related == False:
-        return render_template('product.html', info = info, sizes = size, colors = color)
+            session['cart'][str(id)] = quantity
+            print('new')
+        print(session.get('cart')[str(id)])
+        cart = session.get('cart')
+        print(cart)
+        session.modified = True
+        flash("Item added to cart successfully!")
+        return(redirect('/index'))
     else:
-        for item in related:
-            item = list(item)
-            if len(listings) < 4:
-                listings.append(item)
+        details = getProduct(id)
+        colors = list(getColors(id))
+        color = []
+        sizes = list(getSizes(id))
+        size = []
+        for i in colors:
+            if (str(i) == "(None,)") or (str(i) == "('',)"):
+                continue
             else:
-                break
-        return render_template('product.html', info = info, sizes = size, colors = color, listings=listings)
+                i = str(i)
+                i = i[2:-3]
+                if i not in color:
+                    color.append(i)
+
+        for i in sizes:
+            if (str(i) == "(None,)") or (str(i) == "('',)"):
+                continue
+            else:
+                a = str(i)[2:-3]
+                if a not in size:
+                    size.append(a)
+
+        info = list(details)
+        related = getRelated(info[4])
+        listings = []
+        if related == False:
+            return render_template('product.html', info = info, sizes = size, colors = color)
+        else:
+            for item in related:
+                item = list(item)
+                if len(listings) < 4:
+                    listings.append(item)
+                else:
+                    break
+            return render_template('product.html', info = info, sizes = size, colors = color, listings=listings)
+
+
 
 # Admin Login
 @app.route('/admin', methods=['GET', 'POST'])

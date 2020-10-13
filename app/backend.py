@@ -122,6 +122,7 @@ def getProduct(productid):
     except:
         return False
 
+# Get products of same category 
 def getRelated(category):
     sql = "SELECT * FROM products WHERE category = '{}'".format(category)
     try:
