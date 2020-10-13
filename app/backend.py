@@ -56,7 +56,6 @@ def registerUser(username,password,email):
         data = cursor.lastrowid
         cursor.close()
         conn.close()
-        print(data)
         return [True, data]
     except:
         return[False,0]
@@ -165,13 +164,28 @@ def getColors(productid):
 
 # Update Product
 def updateProduct(info):
-    sql = "UPDATE products SET name = '{1}', price = {2}, description = '{3}' where productid = {0}".format(info[0],info[1],info[2],info[3])
+    sql = "UPDATE products SET name = '{1}', price = {2}, description = '{3}', category = '{4}' where productid = {0}".format(info[0],info[1],info[2],info[3],info[4])
     try:
         conn.connect()
         cursor = conn.cursor()
         cursor.execute(sql)
         conn.commit()
         data = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
+
+# Add New Products
+def addProduct(info):
+    sql =  "INSERT INTO products (name,price,description,category) VALUES ('{0}',{1},'{2}','{3}')".format(info[0],info[1],info[2],info[3])
+    try: 
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        data = cursor.lastrowid
         cursor.close()
         conn.close()
         return data
