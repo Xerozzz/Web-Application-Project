@@ -162,6 +162,8 @@ def getProduct(productid):
 # Get Specific User
 def getUser(userid):
     sql = "SELECT username,email,about FROM users WHERE userid = '{}'".format(userid)
+def getRelated(category):
+    sql = "SELECT * FROM products WHERE category = '{}'".format(category)
     try:
         conn.connect()
         cursor = conn.cursor()
@@ -176,11 +178,14 @@ def getUser(userid):
 # Get Specifc Admin
 def getAdmin(adminid):
     sql = "SELECT username FROM admin WHERE adminid = '{}'".format(adminid)
+# Get sizes
+def getSizes(productid):
+    sql = "SELECT size FROM variations WHERE productid = {}".format(productid)
     try:
         conn.connect()
         cursor = conn.cursor()
         cursor.execute(sql)
-        data = cursor.fetchall()[0]
+        data = cursor.fetchall()
         cursor.close()
         conn.close()
         return data
@@ -188,6 +193,19 @@ def getAdmin(adminid):
         return False
 
 
+# Get colors
+def getColors(productid):
+    sql = "SELECT color FROM variations WHERE productid = {}".format(productid)
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
 
 # Update Product
 def updateProduct(info):
