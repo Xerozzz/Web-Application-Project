@@ -3,19 +3,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 conn.close()
 # Test Function
-def test():
-    username = 'Xeroz'
-    sql = "SELECT * FROM users"
-    conn.connect()
-    cursor = conn.cursor()
-    cursor.execute(sql)
-    data = cursor.fetchall()
-    cursor.close()
-    conn.close()
-    return data
-
 def getProfile(userid):
-    sql = "SELECT username, email FROM users WHERE userid = '{}'".format(userid)
+    sql = "SELECT username, email, about FROM users WHERE userid = '{}'".format(userid)
     conn.connect()
     cursor = conn.cursor()
     cursor.execute(sql)
@@ -23,9 +12,11 @@ def getProfile(userid):
     for row in data:
         username = row[0]
         email = row[1]
+        about = row [2]
     cursor.close()
     conn.close()
-    return username,email
+    print(username,email,about)
+    return username,email,about
     
 # Login User
 def loginUser(username,password):
@@ -60,10 +51,27 @@ def registerUser(username,password,email):
     except:
         return[False,0]
 
-def editProfile(username,email,userid):
-    print(username,email,userid)
-    query = ''' UPDATE users SET username = %s, email =%s WHERE userid =%s '''
-    data = (username,email,userid)
+# Register Admin
+def registerAdmin(username,password):
+    hash = generate_password_hash(password)
+    sql = "INSERT INTO admin (username,hash) VALUES ('{0}','{1}')".format(username,hash)
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        data = cursor.lastrowid
+        cursor.close()
+        conn.close()
+        print(data)
+        return [True, data]
+    except:
+        return[False,0]
+
+def editProfile(username,about,userid):
+    print(username,about,userid)
+    query = ''' UPDATE users SET username = %s, about =%s WHERE userid =%s '''
+    data = (username,about,userid)
     try:
         conn.connect()
         cursor = conn.cursor()
@@ -107,6 +115,35 @@ def listItems():
     except:
         return "An error has occurred, please check the backend"
 
+# List users
+def listUsers():
+    sql = 'SELECT userid, username,email,about FROM users'
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return "An error has occurred, please check the backend"
+
+# List users
+def listAdmins():
+    sql = 'SELECT adminid, username FROM admin'
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return "An error has occurred, please check the backend"
+
+
 # Get Specific Product
 def getProduct(productid):
     sql = "SELECT * FROM products WHERE productid = '{}'".format(productid)
@@ -121,19 +158,25 @@ def getProduct(productid):
     except:
         return False
 
+# Get Specific User
+def getUser(userid):
+    sql = "SELECT username,email,about FROM users WHERE userid = '{}'".format(userid)
 def getRelated(category):
     sql = "SELECT * FROM products WHERE category = '{}'".format(category)
     try:
         conn.connect()
         cursor = conn.cursor()
         cursor.execute(sql)
-        data = cursor.fetchall()
+        data = cursor.fetchall()[0]
         cursor.close()
         conn.close()
         return data
     except:
         return False
 
+# Get Specifc Admin
+def getAdmin(adminid):
+    sql = "SELECT username FROM admin WHERE adminid = '{}'".format(adminid)
 # Get sizes
 def getSizes(productid):
     sql = "SELECT size FROM variations WHERE productid = {}".format(productid)
@@ -147,6 +190,7 @@ def getSizes(productid):
         return data
     except:
         return False
+
 
 # Get colors
 def getColors(productid):
@@ -177,6 +221,9 @@ def updateProduct(info):
     except:
         return False
 
+def updateUser(info):
+    sql = "UPDATE users SET username='{1}', email='{2}', about='{3}' where userid='{0}'".format(info[0],info[1],info[2],info[3])
+    try:
 # Add New Products
 def addProduct(info):
     sql =  "INSERT INTO products (name,price,description,category) VALUES ('{0}',{1},'{2}','{3}')".format(info[0],info[1],info[2],info[3])
@@ -185,6 +232,57 @@ def addProduct(info):
         cursor = conn.cursor()
         cursor.execute(sql)
         conn.commit()
+        data = cursor.rowcount
+        cursor.close()
+        conn.close()
+        print(data)
+        return data
+    except:
+        return False
+
+def updateAdmin(info):
+    sql = "UPDATE admin SET username='{1}' where adminid='{0}'".format(info[0],info[1])
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        data = cursor.rowcount
+        cursor.close()
+        conn.close()
+        print(data)
+        return data
+    except:
+        return False
+
+def deleteUser(userid):
+    sql = "DELETE FROM users WHERE userid = '{}'".format(userid)
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        data = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
+
+def  deleteAdmin(adminid):
+    sql = "DELETE FROM admin WHERE adminid = '{}'".format(adminid)
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        conn.commit()
+        data = cursor.rowcount
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
+
         data = cursor.lastrowid
         cursor.close()
         conn.close()
