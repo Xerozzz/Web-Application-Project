@@ -14,6 +14,7 @@ def test():
     conn.close()
     return data
 
+# Get user profile
 def getProfile(userid):
     sql = "SELECT username, email FROM users WHERE userid = '{}'".format(userid)
     conn.connect()
@@ -61,6 +62,7 @@ def registerUser(username,password,email):
     except:
         return[False,0]
 
+# Edit user profile
 def editProfile(username,email,userid):
     print(username,email,userid)
     query = ''' UPDATE users SET username = %s, email =%s WHERE userid =%s '''

@@ -123,6 +123,7 @@ def search():
             if query in item[1]:
                 results.append(item)
         return render_template('search.html', query = query, listings=results, empty=False)        
+
 # Category Page
 @app.route("/category/<category>")
 def catPg(category):
@@ -132,7 +133,6 @@ def catPg(category):
         item = list(item)
         results.append(item)
     return render_template('category.html', category = category, listings=results, empty=False)        
-
 
 # Product Page
 @app.route('/product/<int:id>', methods=["GET","POST"])
@@ -189,8 +189,6 @@ def prodPg(id):
                 else:
                     break
             return render_template('product.html', info = info, sizes = size, colors = color, listings=listings)
-
-
 
 # Admin Login
 @app.route('/admin', methods=['GET', 'POST'])
