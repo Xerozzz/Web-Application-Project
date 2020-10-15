@@ -27,10 +27,37 @@ class EditItem(FlaskForm):
     productName = StringField('Product Name', validators=[DataRequired()])
     productPrice = DecimalField('Product Price (xx.xx)',validators=[DataRequired()])
     productDesc = StringField('Product Description', validators=[DataRequired()])
+    productCat = StringField('Product Category', validators=[DataRequired()])
     submit = SubmitField('Edit Item') 
 
 # Edit User Profile Form    
 class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired()])
+    about = StringField('About', validators=[DataRequired()])
     submit = SubmitField('Submit')
+
+# Edit User Form
+class EditUserForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    about = StringField('About', validators=[DataRequired()])
+    submit = SubmitField('Edit')
+
+# Edit Admin Form 
+class EditAdminForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    submit = SubmitField('Edit')
+
+# Register Form
+class RegisterAdminForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField('Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Register')
+# Add New Item Form
+class AddItem(FlaskForm):
+    productName = StringField('Product Name', validators=[DataRequired()])
+    productPrice = DecimalField('Product Price (xx.xx)',validators=[DataRequired()])
+    productDesc = StringField('Product Description', validators=[DataRequired()])
+    productCat = StringField('Product Category', validators=[DataRequired()])
+    submit = SubmitField('Add Item') 

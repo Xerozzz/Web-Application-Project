@@ -2,4 +2,30 @@
 
 {% block content %}
     <h1>User Management</h1>
+    <table>
+        <th>Username: </th>
+        <th>Email: </th>
+        <th>About: </th>
+        {% for users in data %}
+        <tr>
+            {% for user in users %}
+                <td>{{user}}</td>
+            {% endfor %}
+            <td><button id="{{users[0]}}" onclick="sendID(id)">Edit</button></td>
+            <td><button id="{{users[0]}}" onclick="sendOverID(id)">Delete</button></td>
+        </tr>
+        {% endfor %}
+        <td><a href="/addUser"><button>Add User</button></a></td>
+
+
+    </table>
+    <script>
+        function sendID(id){
+            window.location.href = `/edituser?userid=${id}`
+        }
+        function sendOverID(id){
+            window.location.href = `/deleteuser?userid=${id}`
+        }
+    </script>
+
 {% endblock %}
