@@ -3,6 +3,18 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 conn.close()
 # Test Function
+def test():
+    username = 'Xeroz'
+    sql = "SELECT * FROM users"
+    conn.connect()
+    cursor = conn.cursor()
+    cursor.execute(sql)
+    data = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return data
+
+# Get user profile
 def getProfile(userid):
     sql = "SELECT username, email, about FROM users WHERE userid = '{}'".format(userid)
     conn.connect()
@@ -68,10 +80,11 @@ def registerAdmin(username,password):
     except:
         return[False,0]
 
-def editProfile(username,about,userid):
-    print(username,about,userid)
-    query = ''' UPDATE users SET username = %s, about =%s WHERE userid =%s '''
-    data = (username,about,userid)
+# Edit user profile
+def editProfile(username,email,userid):
+    print(username,email,userid)
+    query = ''' UPDATE users SET username = %s, email =%s WHERE userid =%s '''
+    data = (username,email,userid)
     try:
         conn.connect()
         cursor = conn.cursor()
@@ -179,7 +192,7 @@ def getRelated(category):
         conn.connect()
         cursor = conn.cursor()
         cursor.execute(sql)
-        data = cursor.fetchall()[0]
+        data = cursor.fetchall()
         cursor.close()
         conn.close()
         return data

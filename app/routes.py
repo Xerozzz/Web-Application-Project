@@ -127,7 +127,7 @@ def search():
             if query in item[1]:
                 results.append(item)
         return render_template('search.html', query = query, listings=results, empty=False)        
-        
+
 # Category Page
 @app.route("/category/<category>")
 def catPg(category):
@@ -137,7 +137,6 @@ def catPg(category):
         item = list(item)
         results.append(item)
     return render_template('category.html', category = category, listings=results, empty=False)        
-
 
 # Product Page
 @app.route('/product/<int:id>', methods=["GET","POST"])
@@ -194,8 +193,6 @@ def prodPg(id):
                 else:
                     break
             return render_template('product.html', info = info, sizes = size, colors = color, listings=listings)
-
-
 
 # Admin Login
 @app.route('/admin', methods=['GET', 'POST'])
@@ -280,7 +277,7 @@ def manageuser():
     data = listUsers()
     return render_template('manageuser.html', title='Manage Users', data = data)
 
-#Admin Edit User
+# Admin Edit User
 @app.route('/edituser', methods=['GET','POST'])
 def edituser():
     if session.get('admin') != True:
@@ -305,6 +302,7 @@ def edituser():
             form.about.data = data[2]
     return render_template('editUser.html', title='Edit User', form = form)
 
+# Admin Delete User
 @app.route('/deleteuser', methods=['GET', 'POST','DELETE'])
 def deleteuser():
     if session.get('admin') != True:
@@ -317,6 +315,7 @@ def deleteuser():
         flash("Deleted successfully")
     return redirect(url_for("manageuser"))
 
+# Admin Add User  
 @app.route('/addUser', methods=['GET','POST'])
 def adduser():
     if session.get('admin') != True:
@@ -345,7 +344,7 @@ def manageadmin():
     data = listAdmins()
     return render_template('manageadmin.html', data = data)
 
-#Admin Delete Admin
+# Admin Delete Admin
 @app.route('/deleteadmin', methods=['GET', 'POST','DELETE'])
 def deleteadmin():
     if session.get('admin') != True:
@@ -358,6 +357,7 @@ def deleteadmin():
         flash("Deleted successfully")
     return redirect(url_for("manageadmin"))
 
+# Admin Edit Admin
 @app.route('/editadmin', methods=['GET','POST'])
 def editadmin():
     if session.get('admin') != True:
@@ -381,6 +381,7 @@ def editadmin():
             form.username.data = data[0]
     return render_template('editAdmin.html', title='Edit User', form = form)
 
+# Admin Add Admin
 @app.route('/addAdmin', methods=['GET','POST'])
 def addadmin():
     if session.get('admin') != True:
