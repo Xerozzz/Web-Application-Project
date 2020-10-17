@@ -1,5 +1,7 @@
 from flask import render_template, flash, redirect, url_for, make_response, session, request
 from app import app
+# from app.forms import LoginForm,RegisterForm,AdminForm,EditItem,EditProfileForm,EditUserForm,EditAdminForm,RegisterAdminForm
+# from app.backend import getProfile,loginUser,registerUser,editProfile,adminUser,listItems,listUsers,getProduct,getUser,updateProduct,updateUser,deleteUser,listAdmins, deleteAdmin,updateAdmin,getAdmin,registerAdmin
 from app.forms import *
 from app.backend import *
 
@@ -132,10 +134,13 @@ def search():
 @app.route("/category/<category>")
 def catPg(category):
     listings = getRelated(category)
+    print(listings)
     results = []
     for item in listings:
-        item = list(item)
+        # print(item)
+        # item = list(item)
         results.append(item)
+        print(results)
     return render_template('category.html', category = category, listings=results, empty=False)        
 
 
@@ -157,7 +162,7 @@ def prodPg(id):
         print(cart)
         session.modified = True
         flash("Item added to cart successfully!")
-        return(redirect('/index'))
+        return redirect(url_for('viewcart'))
     else:
         details = getProduct(id)
         colors = list(getColors(id))
@@ -194,7 +199,6 @@ def prodPg(id):
                 else:
                     break
             return render_template('product.html', info = info, sizes = size, colors = color, listings=listings)
-
 
 
 # Admin Login
@@ -399,7 +403,7 @@ def addadmin():
     elif request.method == "GET":
         return render_template('addadmin.html',form = form)
     return render_template('addadmin.html',form = form)
-    
+
 # Adding Item to Cart
 @app.route('/addcart', methods=['POST'])
 def addcart():
@@ -408,4 +412,26 @@ def addcart():
     session['cart'][productid] = quantity
     session.modified = True
     flash("Item added to cart successfully!")
-    return redirect(url_for('index'))
+    return redirect(url_for('viewcart'))
+
+@app.route('/viewcart',methods =["GET"])
+def viewcart():
+    cart = session.get('cart')
+    print("this is the cart {}".format(cart))
+    quantity = cart.values()
+    print("here are the quantities {}".format(quantity))
+    quantities = list(quantity)
+    data = []
+    i=0
+    for item in cart:
+        if i<len(quantities):   
+            productid = item
+            res = (getCartProduct(productid))
+            print("this is the value {}".format(res))
+            listData = list(res)
+            quantity = quantities[i]
+            listData.append(quantity)
+            print("this is the data {}".format(listData))
+            data.append(listData)
+            i += 1 
+    return render_template('viewcart.html', data = data)

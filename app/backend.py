@@ -146,6 +146,7 @@ def listAdmins():
 
 # Get Specific Product
 def getProduct(productid):
+    print(productid)
     sql = "SELECT * FROM products WHERE productid = '{}'".format(productid)
     try:
         conn.connect()
@@ -157,6 +158,22 @@ def getProduct(productid):
         return data
     except:
         return False
+
+#Get Cart Product
+def getCartProduct(productid):
+    print(productid)
+    sql = "SELECT name,price,category FROM products WHERE productid = '{}'".format(productid)
+    try:
+        conn.connect()
+        cursor = conn.cursor()
+        cursor.execute(sql)
+        data = cursor.fetchall()[0]
+        cursor.close()
+        conn.close()
+        return data
+    except:
+        return False
+
 
 # Get Specific User
 def getUser(userid):
@@ -179,7 +196,7 @@ def getRelated(category):
         conn.connect()
         cursor = conn.cursor()
         cursor.execute(sql)
-        data = cursor.fetchall()[0]
+        data = cursor.fetchall()
         cursor.close()
         conn.close()
         return data
@@ -200,7 +217,10 @@ def getAdmin(adminid):
     except:
         return False
 
+# <<<<<<< Updated upstream
 
+# =======
+# >>>>>>> Stashed changes
 # Get sizes
 def getSizes(productid):
     sql = "SELECT size FROM variations WHERE productid = {}".format(productid)

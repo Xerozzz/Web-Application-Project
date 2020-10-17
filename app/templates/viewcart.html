@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+        }
+    </style>
+    <h1>Viewing of Cart</h1>
+    {% if session.get('cart')=={} %}
+        <p>There is nothing in your cart right now!</p>
+    {% endif %}
+
+    {% if session.get('cart')!={} %}
+            <table>
+                <tr>
+                    <th>Product Name: </th>
+                    <th>Price ($): </th>
+                    <th>Category: </th>
+                    <th>Quantity: </th>    
+                </tr>
+            {% for items in data %}
+                <tr>
+                    {% for item in items %}
+                        <td>{{item}}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %} 
+        </table>
+
+        <button>Checkout</button>
+    {% endif %}
+
+{% endblock %}
