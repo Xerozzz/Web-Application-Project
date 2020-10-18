@@ -162,7 +162,7 @@ def getProduct(productid):
 #Get Cart Product
 def getCartProduct(productid):
     print(productid)
-    sql = "SELECT name,price,category FROM products WHERE productid = '{}'".format(productid)
+    sql = "SELECT productid,name,price,category FROM products WHERE productid = '{}'".format(productid)
     try:
         conn.connect()
         cursor = conn.cursor()

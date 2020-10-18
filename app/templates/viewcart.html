@@ -17,21 +17,30 @@
     {% if session.get('cart')!={} %}
             <table>
                 <tr>
+                    <th>Product ID: </th>
                     <th>Product Name: </th>
                     <th>Price ($): </th>
                     <th>Category: </th>
                     <th>Quantity: </th>    
+                    <th>Action: </th>
                 </tr>
             {% for items in data %}
                 <tr>
                     {% for item in items %}
                         <td>{{item}}</td>
                     {% endfor %}
+                    <td><button id="{{items[0]}}" onclick="sendID(id)">Delete</button></td>
                 </tr>
             {% endfor %} 
         </table>
-
+        <p>Total Price is: {{total}}</p>
         <button>Checkout</button>
     {% endif %}
+
+    <script>
+        function sendID(id){
+            window.location.href = `/deletecart?productid=${id}`
+        }
+    </script>
 
 {% endblock %}

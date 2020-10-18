@@ -417,21 +417,37 @@ def addcart():
 @app.route('/viewcart',methods =["GET"])
 def viewcart():
     cart = session.get('cart')
-    print("this is the cart {}".format(cart))
+    print("this is the cart now {}".format(cart))
     quantity = cart.values()
-    print("here are the quantities {}".format(quantity))
     quantities = list(quantity)
     data = []
-    i=0
-    for item in cart:
+    i = 0
+    total = 0
+    for productid in cart:
         if i<len(quantities):   
-            productid = item
             res = (getCartProduct(productid))
-            print("this is the value {}".format(res))
             listData = list(res)
             quantity = quantities[i]
             listData.append(quantity)
-            print("this is the data {}".format(listData))
+            total += float(listData[2]) * int(listData[4])
             data.append(listData)
             i += 1 
-    return render_template('viewcart.html', data = data)
+    print("this is the total price {}".format(total))
+    return render_template('viewcart.html', data = data, total = total)
+
+@app.route('/deletecart', methods=['GET', 'POST','DELETE'])
+def deletecart():
+    productid = request.args.get('productid')
+    cart = session.get('cart')
+    cartquantity = cart[productid]
+    print("this is the cart quantity {}".format(cartquantity))
+    if cartquantity != 1:
+        cartquantity -= 1
+        session['cart'][productid] = cartquantity
+        session.modified = True
+    else:
+        session['cart'].pop(productid)
+        session.modified = True
+    flash("Item successfully deleted!")
+    return redirect(url_for('viewcart'))
+
