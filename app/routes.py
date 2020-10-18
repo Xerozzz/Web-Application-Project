@@ -448,6 +448,6 @@ def deletecart():
     else:
         session['cart'].pop(productid)
         session.modified = True
-    flash("Item successfully deleted!")
+    flash("Item successfully deleted!!")
     return redirect(url_for('viewcart'))
 
