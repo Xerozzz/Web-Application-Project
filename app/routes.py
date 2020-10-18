@@ -451,3 +451,7 @@ def deletecart():
     flash("Item successfully deleted!!")
     return redirect(url_for('viewcart'))
 
+@app.route('/checkout', methods=['GET'])
+def checkout():
+    username = session.get('username')
+    return render_template("checkout.html", username = username)
