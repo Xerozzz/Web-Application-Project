@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+        }
+    </style>
+    <h1>Viewing of Cart</h1>
+    {% if session.get('cart')=={} %}
+        <p>There is nothing in your cart right now!</p>
+    {% endif %}
+
+    {% if session.get('cart')!={} %}
+            <table>
+                <tr>
+                    <th>Product ID: </th>
+                    <th>Product Name: </th>
+                    <th>Price ($): </th>
+                    <th>Category: </th>
+                    <th>Quantity: </th>    
+                    <th>Action: </th>
+                </tr>
+            {% for items in data %}
+                <tr>
+                    {% for item in items %}
+                        <td>{{item}}</td>
+                    {% endfor %}
+                    <td><button id="{{items[0]}}" onclick="sendID(id)">Delete</button></td>
+                </tr>
+            {% endfor %} 
+        </table>
+        <p>Total Price is: {{total}}</p>
+        <a href ="/checkout"><button>Checkout</button></a>
+    {% endif %}
+
+    <script>
+        function sendID(id){
+            window.location.href = `/deletecart?productid=${id}`
+        }
+    </script>
+
+{% endblock %}
