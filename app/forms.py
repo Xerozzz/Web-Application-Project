@@ -30,19 +30,20 @@ class EditItem(FlaskForm):
     productCat = StringField('Product Category', validators=[DataRequired()])
     submit = SubmitField('Edit Item') 
 
-#Edit Profile Form
+# Edit User Profile Form    
 class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     about = StringField('About', validators=[DataRequired()])
     submit = SubmitField('Submit')
 
-#Edit User Form
+# Edit User Form
 class EditUserForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
     about = StringField('About', validators=[DataRequired()])
     submit = SubmitField('Edit')
 
+# Edit Admin Form 
 class EditAdminForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     submit = SubmitField('Edit')
