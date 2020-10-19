@@ -421,6 +421,8 @@ def addcart():
 def viewcart():
     cart = session.get('cart')
     print("this is the cart now {}".format(cart))
+    # if cart == None:
+    #     return render_template('viewcart.html', cart = None)
     quantity = cart.values()
     quantities = list(quantity)
     data = []
@@ -435,6 +437,7 @@ def viewcart():
             total += float(listData[2]) * int(listData[4])
             data.append(listData)
             i += 1 
+    total = format(total, '.2f')
     print("this is the total price {}".format(total))
     return render_template('viewcart.html', data = data, total = total)
 
@@ -457,4 +460,6 @@ def deletecart():
 @app.route('/checkout', methods=['GET'])
 def checkout():
     username = session.get('username')
+    session['cart']={}
+    session.modified = True
     return render_template("checkout.html", username = username)

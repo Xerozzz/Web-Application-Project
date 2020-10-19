@@ -81,10 +81,10 @@ def registerAdmin(username,password):
         return[False,0]
 
 # Edit user profile
-def editProfile(username,email,userid):
-    print(username,email,userid)
-    query = ''' UPDATE users SET username = %s, email =%s WHERE userid =%s '''
-    data = (username,email,userid)
+def editProfile(username,about,userid):
+    print(username,about,userid)
+    query = ''' UPDATE users SET username = %s, about =%s WHERE userid =%s '''
+    data = (username,about,userid)
     try:
         conn.connect()
         cursor = conn.cursor()
